@@ -262,7 +262,12 @@
 
                 const onFinish = async (values) => {
                     try {
-                        const response = await fetch('record.php', {
+                        if (values.hearAbout === 'other' && values.hearAboutOther) {
+                            values.hearAbout = values.hearAboutOther;
+                            delete values.hearAboutOther;
+                        }
+                        console.log(values);
+                        const response = await fetch('/req/', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -316,7 +321,7 @@
                     return (
                         <div className="thankuClass ant-collapse ant-collapse-icon-position-start css-d2lrxs p-5">
                             <img 
-                                src="/img/logo.png?324324234234"
+                                src="/img/logo.png?3243242342343"
                                 className="thankuImg"
                                 alt="Thank you"
                             />
