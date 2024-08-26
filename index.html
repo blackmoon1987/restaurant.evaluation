@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <title>Redston Restaurant Feedback</title>
+        <script src='https://unpkg.com/react@18/umd/react.development.js'></script>
+        <script src='https://unpkg.com/react-dom@18/umd/react-dom.development.js'></script>
+        <script src='https://unpkg.com/babel-standalone@6/babel.min.js'></script>
+        <script src='https://unpkg.com/dayjs@1/dayjs.min.js'></script>
+        <script src='https://unpkg.com/antd@5.20.0/dist/antd-with-locales.min.js'></script>
+        <script src='https://unpkg.com/@ant-design/icons/dist/index.umd.js'></script>
+        <link rel="stylesheet" href="https://unpkg.com/antd@5.20.0/dist/reset.css">
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+            html {
+                direction: rtl;
+                color: #e7e5e5 !important;
+            }
+            body {
+                font-family: "Rubik", sans-serif;
+                font-optical-sizing: auto;
+                font-weight: 700;
+                font-style: normal;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                background-image: url("/img/bbgg.jpg");
+            }
+            .header {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .form-item {
+                margin-bottom: 15px;
+            }
+            .ant-radio-wrapper {
+                margin-bottom: 12px;
+            }
+            .css-d2lrxs {
+                font-family: "Rubik", sans-serif;
+                font-optical-sizing: auto;
+                font-weight: 400;
+                font-style: normal;
+            }
+            :where(.css-d2lrxs).ant-radio-wrapper span.ant-radio+* {
+                color: #e7e5e5 !important;
+            }
+            .ant-collapse-header {
+                color: #b12028 !important
+            }
+            :where(.css-d2lrxs).ant-form-item .ant-form-item-label >label, .ant-collapse-header {
+                color: #e7e5e5 !important;
+            }
+            .ant-collapse-content-box {
+                color: red !important;
+            }
+            .ant-collapse-content {
+                color: #e7e5e5 !important;
+                background-color: #ffffff00 !important;
+            }
+            .ant-collapse-content-box {
+                padding: 16px !important;
+                background-color: #ffffff00;
+            }
+            #hearAbout, #visitFrequency {
+                display: inline-grid;
+            }
+            .ant-rate-star:not(.ant-rate-star-full) .ant-rate-star-first,
+            .ant-rate-star:not(.ant-rate-star-full) .ant-rate-star-second {
+                color: white;
+            }
+            .ant-rate-star-first,
+            .ant-rate-star-second {
+                transition: all 0.3s;
+            }
+            .ant-rate-star-first:hover,
+            .ant-rate-star-second:hover,
+            .ant-rate-star-half .ant-rate-star-first,
+            .ant-rate-star-full .ant-rate-star-second {
+                color: #fadb14;
+            }
+            .headImg {
+                cursor: pointer;
+                margin: 5px;
+                border-radius: 5px;
+                border-style: groove;
+                border-color: red;
+            }
+            .topText {
+                font-weight: 400;
+            }
+            .ant-form-item-required {
+                font-weight: 700;
+            }
+            .ant-radio-inner {
+                border-color: #b12028 !important;
+            }
+            .ant-radio-input:checked + .ant-radio-inner {
+                background-color: #b12028 !important;
+                border-color: #b12028 !important;
+            }
+            .ant-btn-primary {
+                background: #b12028 !important;
+                margin-bottom: 10px;
+            }
+            .thankuClass {
+                margin-top: 25%;
+                text-align: -webkit-center;
+                padding:5px;
+            }
+            .thankuImg {
+                width: 220px;
+                margin: 20px 10px
+            }
+            .gogRateBtn {
+                margin: 10%;
+                background: #b12028;
+                border-radius: 10px;
+                border-style: dotted;
+                color: white;
+            }
+            .navi {
+                display: ruby-text;
+                width: -webkit-fill-available;
+                margin: 6px;
+                position: absolute;
+                top: 0;
+                text-align: right;	 
+            }
+            .fw400 {
+                font-weight: 400;
+            }
+            .underNavi {
+                border-bottom-style: solid;
+                margin-top: 8px;
+                border-width: 1px;
+                border-color: #9e9e9e0d;
+            }
+            .submitBtn {
+                margin: 5%;
+                width: 89%;
+            }
+            .thank-you-message{
+                color:antiquewhite;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script type="text/babel">
+        const translations = {
+            restaurantNameOld: { sa: 'مطعم ريدستون', en: 'Redston Restaurant' },
+            topText: { sa: 'آراؤكم وملاحظاتكم تساهم في تحسين تجربة ردستون وجعل زيارتكم القادمة أفضل!',
+            en: 'Your feedback and suggestions help improve the Redston experience and ensure an even better visit next time.' },
+            personalInfo: { sa: 'المعلومات الشخصية', en: 'Personal Information' },
+            fullName: { sa: 'الاسم الكامل', en: 'Full Name' },
+            mobile: { sa: 'رقم الجوال', en: 'Mobile' },
+            visitDate: { sa: 'تاريخ الزيارة', en: 'Your visit date' },
+            visitInfo: { sa: 'تفاصيل عن زيارتكم لمطعم ردستون', en: 'Visit Information' },
+            hearAbout: { sa: 'كيف سمعت عن مطعمنا؟', en: 'How did you hear about our restaurant?' },
+            friend: { sa: 'توصية من صديق أو عائلة', en: 'Recommendation from a friend or family' },
+            snapchat: { sa: 'عبر سناب شات', en: 'Via Snapchat' },
+            instagram: { sa: 'عبر انستغرام', en: 'Via Instagram' },
+            tiktok: { sa: 'عبر تيك توك', en: 'Via TikTok' },
+            searchEngine: { sa: 'محرك بحث (جوجل، بينج، إلخ)', en: 'Search engine (Google, Bing, etc.)' },
+            influencers: { sa: 'عبر إعلانات مؤثرين السوشال ميديا', en: 'Through social media influencer ads' },
+            other: { sa: 'أخرى', en: 'Other' },
+            visitFrequency: { sa: 'هل هذه أول تجربة لك في ريدستون؟', en: 'Is this your first experience in Redston?' },
+            firstVisit: { sa: 'نعم، أول زيارة', en: 'Yes, first visit' },
+            visitedBefore: { sa: 'لا، لقد زرناكم من قبل (مرة - مرتين)', en: 'No, we have visited you before (once - twice)' },
+            frequentVisitor: { sa: 'لقد زرناكم أكثر من 3 مرات', en: 'We have visited you more than 3 times' },
+            qualityRating: { sa: 'تقييم الجودة والخدمة في ردستون', en: 'Quality Rating' },
+            steakQuality: { sa: 'كيف تقيم جودة الستيك واللحوم؟', en: 'How do you rate the quality of steak and meat?' },
+            feedbackSuggestions: { sa: 'آراؤكم حول زيارتكم وتجربتكم في ردستون', en: 'Your opinions about your visit and experience at Redstone.' },
+            overallExperience: { sa: 'قيم تجربتك العامة في ريدستون', en: 'Rate your overall experience at Redston' },
+            suggestions: { sa: 'هل لديك اقتراحات أو ملاحظات لقد تجعل من زيارتكم القادمة لردستون أفضل؟', en: 'Do you have any suggestions or feedback that could improve your next visit at Redston?' },
+            lowRatingFeedback: { sa: 'نتمنى أن تطلعونا على أسباب وجوانب عدم رضاكم عن التجربة ليتم العمل على تطويرها',
+            en: 'We hope that you will inform us about the reasons and aspects of your dissatisfaction with the experience so that we can work on improving it.' },
+            submit: { sa: 'إرسال', en: 'Submit' },
+            serviceQuality: { sa: 'كيف كانت الخدمة أثناء تجربتك؟', en: 'How was the service during your experience?' },
+            pleaseFillAllFields: { sa: 'يرجى تعبئة جميع الحقول المطلوبة!', en: 'Please fill in all required fields!' },
+            thanku: { sa: 'شكراً لتخصيص وقتكم للإجابة على الأسئلة. نسعد دائماً بخدمتكم ونتطلع لتحسين تجربتكم معنا باستمرار!', en: 'Thank you for taking the time to answer the questions. We are always happy to serve you and look forward to continuously improving your experience with us!' },
+            gogRate: { sa: 'قيمنا على Google Maps لمساعدتنا في تقديم الأفضل!', en: 'Rate us on Google Maps to help us deliver the best!' },
+            error: { sa: 'خطأ', en: 'Error' },
+            languageToggle: { sa:'English' , en: 'العربية' },
+            otherSource: { sa: 'يرجى التحديد', en: 'Please specify' },
+            pleaseSpecify: { sa: 'يرجى تحديد المصدر', en: 'Please specify the source' },
+            invalidMobileFormat: { 
+                sa: 'يجب أن يبدأ رقم الجوال بـ 05 ويتكون من 10 أرقام', 
+                en: 'Mobile number must start with 05 and be 10 digits long'
+            },
+            mobileRequired: { 
+                sa: 'رقم الجوال مطلوب', 
+                en: 'Mobile number is required'
+            },
+        };
+            const { Collapse, Form, Input, DatePicker, Radio, Rate, Button, notification } = antd;
+            const { Panel } = Collapse;
+
+            const FeedbackForm = () => {
+                const [form] = Form.useForm();
+                const [state, setState] = React.useState({
+                    activeKey: ['1'],
+                    language: 'sa',
+                    submitted: false,
+                    qualityRating: 0,
+                    serviceQuality: 0,
+                    overallExperience: 0,
+                    showOtherInput: false
+                });
+
+                const validateMobile = (_, value) => {
+                    const regex = /^05\d{8}$/;
+                    if (!value || regex.test(value)) {
+                        return Promise.resolve();
+                    }
+                    return Promise.reject(new Error(t('invalidMobileFormat')));
+                };
+
+                const t = (key) => {
+                    if (translations[key] && translations[key][state.language]) {
+                        return translations[key][state.language];
+                    }
+                    console.warn(`Translation missing for key: ${key}`);
+                    return key;
+                };
+
+                const panelFields = {
+                    '1': ['fullName', 'mobile'],
+                    '2': ['visitDate', 'hearAbout', 'visitFrequency'],
+                    '3': ['qualityRating', 'serviceQuality', 'overallExperience', 'suggestions']
+                };
+
+                const onFieldsChange = (changedFields, allFields) => {
+                    const currentPanel = state.activeKey[state.activeKey.length - 1];
+                    const currentPanelFields = panelFields[currentPanel];
+
+                    const allFieldsFilled = currentPanelFields.every(fieldName => {
+                        const field = allFields.find(f => f.name[0] === fieldName);
+                        return field && field.value !== undefined && field.value !== '';
+                    });
+
+                    if (allFieldsFilled) {
+                        const nextPanel = String(Number(currentPanel) + 1);
+                        if (panelFields[nextPanel] && !state.activeKey.includes(nextPanel)) {
+                            setState(prevState => ({ 
+                                ...prevState, 
+                                activeKey: [...prevState.activeKey, nextPanel] 
+                            }));
+                        }
+                    }
+                };
+
+                const onHearAboutChange = (e) => {
+                    setState(prevState => ({
+                        ...prevState,
+                        showOtherInput: e.target.value === 'other'
+                    }));
+                };
+
+                const onFinish = async (values) => {
+                    try {
+                        const response = await fetch('record.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(values)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+
+                        const result = await response.json();
+                        console.log('Success:', result);
+                        setState(prevState => ({ 
+                            ...prevState, 
+                            submitted: true,
+                            qualityRating: values.qualityRating,
+                            serviceQuality: values.serviceQuality,
+                            overallExperience: values.overallExperience
+                        }));
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                };
+
+                const onFinishFailed = ({ errorFields }) => {
+                    if (errorFields.length > 0) {
+                        form.scrollToField(errorFields[0].name);
+                        notification.error({
+                            message: t('error'),
+                            description: t('pleaseFillAllFields'),
+                            placement: 'topRight',
+                        });
+                    }
+                };
+
+                const toggleLanguage = () => {
+                    const newLang = state.language === 'sa' ? 'en' : 'sa';
+                    const newDir = newLang === 'sa' ? 'rtl' : 'ltr';
+                    setState(prevState => ({ 
+                        ...prevState, 
+                        language: newLang,
+                        direction: newDir
+                    }));
+                    document.documentElement.style.direction = newDir;
+                };
+
+                if (state.submitted) {
+                    const showGoogleRating = state.qualityRating >= 4 && state.serviceQuality >= 4 && state.overallExperience >= 4;
+                    
+                    return (
+                        <div className="thankuClass ant-collapse ant-collapse-icon-position-start css-d2lrxs p-5">
+                            <img 
+                                src="/img/logo.png?324324234234"
+                                className="thankuImg"
+                                alt="Thank you"
+                            />
+                            <div className="thank-you-message p-4">
+                                <span className="fw400">{t('thanku')}</span>
+                            </div>
+                            <br />
+                            {showGoogleRating && (
+                                <a href="https://maps.app.goo.gl/z3oSw8zQPDv6FaiQA">
+                                    <button className="gogRateBtn">{t('gogRate')}</button>
+                                </a>
+                            )}
+                        </div>
+                    );
+                }
+
+                const resetZoom = () => {
+                    if ('visualViewport' in window) {
+                        // For browsers that support visualViewport
+                        if (window.visualViewport.scale !== 1) {
+                            document.body.style.transform = `scale(${1 / window.visualViewport.scale})`;
+                            document.body.style.transformOrigin = 'center top';
+                            setTimeout(() => {
+                                document.body.style.transform = '';
+                                document.body.style.transformOrigin = '';
+                            }, 300);
+                        }
+                    } else {
+                        document.body.style.zoom = 1;
+                    }
+                };
+
+                return (
+                    <div>
+                        <div className="header">
+                            <div className="navi">
+                                <span 
+                                    onClick={toggleLanguage}
+                                    className="fw400">
+                                    {t('languageToggle')} 🌐
+                                </span>
+                                <div className="underNavi"></div>
+                            </div>
+                            <img 
+                                src="/img/logo.png?324324234234" 
+                                alt={t('topText')} 
+                                className="attachment-full size-full wp-image-28965 headImgxxxxxx"
+                                style={{ width: '100%', marginBottom: '20px' }}
+                            />
+                            <div className="topText">{t('topText')}</div>
+                        </div>
+                        <Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed} layout="vertical" onFieldsChange={onFieldsChange}>
+                            <Collapse activeKey={state.activeKey} onChange={activeKey => setState(prevState => ({ ...prevState, activeKey }))}>
+                                <Panel header={t('personalInfo')} key="1">
+                                    <Form.Item name="fullName" label={t('fullName')} rules={[{ required: true }]}>
+                                        <Input />
+                                    </Form.Item>
+                                    <Form.Item 
+                                        name="mobile" 
+                                        label={t('mobile')} 
+                                        rules={[
+                                            { required: true, message: t('mobileRequired') },
+                                            { validator: validateMobile }
+                                        ]}
+                                    >
+                                        <Input placeholder="05xxxxxxxx" />
+                                    </Form.Item>
+                                </Panel>
+                                <Panel header={t('visitInfo')} key="2">
+                                    <Form.Item name="visitDate" label={t('visitDate')} rules={[{ required: true }]}>
+                                        <DatePicker onChange={() => {
+                                            setTimeout(resetZoom, 300);
+                                        }} />
+                                    </Form.Item>
+                                    <Form.Item name="hearAbout" label={t('hearAbout')} rules={[{ required: true }]}>
+                                        <Radio.Group onChange={onHearAboutChange}>
+                                            <Radio value="friend">{t('friend')}</Radio>
+                                            <Radio value="snapchat">{t('snapchat')}</Radio>
+                                            <Radio value="instagram">{t('instagram')}</Radio>
+                                            <Radio value="tiktok">{t('tiktok')}</Radio>
+                                            <Radio value="searchEngine">{t('searchEngine')}</Radio>
+                                            <Radio value="influencers">{t('influencers')}</Radio>
+                                            <Radio value="other">{t('other')}</Radio>
+                                        </Radio.Group>
+                                    </Form.Item>
+                                    {state.showOtherInput && (
+                                        <Form.Item 
+                                            name="hearAboutOther" 
+                                            label={t('otherSource')} 
+                                            rules={[{ required: true, message: t('pleaseSpecify') }]}
+                                        >
+                                            <Input.TextArea rows={4} />
+                                        </Form.Item>
+                                    )}
+                                    <Form.Item name="visitFrequency" label={t('visitFrequency')} className="hearAbout" rules={[{ required: true }]}>
+                                        <Radio.Group>
+                                            <Radio value="firstVisit">{t('firstVisit')}</Radio>
+                                            <Radio value="visitedBefore">{t('visitedBefore')}</Radio>
+                                            <Radio value="frequentVisitor">{t('frequentVisitor')}</Radio>
+                                        </Radio.Group>
+                                    </Form.Item>
+                                </Panel>
+                                <Panel header={t('feedbackSuggestions')} key="3">
+                                    <Form.Item name="qualityRating" label={t('steakQuality')} rules={[{ required: true }]}>
+                                        <Rate />
+                                    </Form.Item>
+                                    <Form.Item name="serviceQuality" label={t('serviceQuality')} rules={[{ required: true }]}>
+                                        <Rate />
+                                    </Form.Item>
+                                    <Form.Item name="overallExperience" label={t('overallExperience')} rules={[{ required: true }]}>
+                                        <Rate />
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="suggestions"
+                                        label={t('suggestions')}
+                                        rules={[
+                                            ({ getFieldValue }) => ({
+                                                required: getFieldValue('qualityRating') < 4 || 
+                                                          getFieldValue('serviceQuality') < 4 || 
+                                                          getFieldValue('overallExperience') < 4
+                                            })
+                                        ]}
+                                    >
+                                        <Input.TextArea />
+                                    </Form.Item>
+                                    <Form.Item noStyle shouldUpdate>
+                                        {({ getFieldValue }) =>
+                                            (getFieldValue('qualityRating') !== undefined &&
+                                             getFieldValue('serviceQuality') !== undefined && 
+                                             getFieldValue('overallExperience') !== undefined &&
+                                             (getFieldValue('qualityRating') < 4 || 
+                                              getFieldValue('serviceQuality') < 4 || 
+                                              getFieldValue('overallExperience') < 4)) ? (
+                                                <div style={{ color: 'red', marginTop: '-24px', marginBottom: '24px' }}>
+                                                    {t('lowRatingFeedback')}
+                                                </div>
+                                            ) : null
+                                        }
+                                    </Form.Item>
+                                </Panel>
+                            </Collapse>
+                            <Form.Item>
+                                <Button className="submitBtn" type="primary" htmlType="submit">{t('submit')}</Button>
+                            </Form.Item>
+                        </Form>
+                    </div>
+                );
+            };
+
+            ReactDOM.createRoot(document.getElementById('root')).render(<FeedbackForm />);
+        </script>
+    </body>
+</html>
