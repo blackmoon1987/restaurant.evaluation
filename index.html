@@ -1,477 +1,781 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-        <title>Redston Restaurant Feedback</title>
-        <script src='https://unpkg.com/react@18/umd/react.development.js'></script>
-        <script src='https://unpkg.com/react-dom@18/umd/react-dom.development.js'></script>
-        <script src='https://unpkg.com/babel-standalone@6/babel.min.js'></script>
-        <script src='https://unpkg.com/dayjs@1/dayjs.min.js'></script>
-        <script src='https://unpkg.com/antd@5.20.0/dist/antd-with-locales.min.js'></script>
-        <script src='https://unpkg.com/@ant-design/icons/dist/index.umd.js'></script>
-        <link rel="stylesheet" href="https://unpkg.com/antd@5.20.0/dist/reset.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Redston Restaurant Evaluation</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
-            html {
+                @font-face {
+                    font-family: 'dinNextAr';
+                    src: url('assets/dinNextAr.ttf') format('truetype');
+                    font-weight: normal;
+                    font-style: normal; 
+                }
+                @font-face {
+                    font-family: 'dinNextEn';
+                    src: url('assets/dinNextEn.ttf') format('truetype'); 
+                    font-weight: normal;
+                    font-style: normal; 
+                }
+            .rtl {
                 direction: rtl;
-                color: #e7e5e5 !important;
+                text-align: right;
+                font-family: 'dinNextAr', sans-serif;
+            }
+            .ltr {
+                direction: ltr;
+                text-align: left;
+                font-family: 'dinNextEn', sans-serif;
+            }
+            .survey-page {
+                display: none;
+            }
+            .survey-page.active {
+                display: block;
             }
             body {
-                font-family: "Rubik", sans-serif;
                 font-optical-sizing: auto;
-                font-weight: 700;
+                font-weight: 600;
                 font-style: normal;
                 max-width: 800px;
                 margin: 0 auto;
                 padding: 20px;
                 background-image: url("/img/bbgg.jpg");
-            }
-            .header {
-                text-align: center;
-                margin-bottom: 20px;
-            }
-            .form-item {
-                margin-bottom: 15px;
-            }
-            .ant-radio-wrapper {
-                margin-bottom: 12px;
-            }
-            .css-d2lrxs {
-                font-family: "Rubik", sans-serif;
-                font-optical-sizing: auto;
+                color: white;
                 font-weight: 400;
                 font-style: normal;
             }
-            :where(.css-d2lrxs).ant-radio-wrapper span.ant-radio+* {
-                color: #e7e5e5 !important;
-            }
-            .ant-collapse-header {
-                color: #b12028 !important
-            }
-            :where(.css-d2lrxs).ant-form-item .ant-form-item-label >label, .ant-collapse-header {
-                color: #e7e5e5 !important;
-            }
-            .ant-collapse-content-box {
-                color: red !important;
-            }
-            .ant-collapse-content {
-                color: #e7e5e5 !important;
-                background-color: #ffffff00 !important;
-            }
-            .ant-collapse-content-box {
-                padding: 16px !important;
-                background-color: #ffffff00;
-            }
-            #hearAbout, #visitFrequency {
-                display: inline-grid;
-            }
-            .ant-rate-star:not(.ant-rate-star-full) .ant-rate-star-first,
-            .ant-rate-star:not(.ant-rate-star-full) .ant-rate-star-second {
-                color: white;
-            }
-            .ant-rate-star-first,
-            .ant-rate-star-second {
-                transition: all 0.3s;
-            }
-            .ant-rate-star-first:hover,
-            .ant-rate-star-second:hover,
-            .ant-rate-star-half .ant-rate-star-first,
-            .ant-rate-star-full .ant-rate-star-second {
-                color: #fadb14;
-            }
-            .headImg {
-                cursor: pointer;
-                margin: 5px;
-                border-radius: 5px;
-                border-style: groove;
-                border-color: red;
-            }
-            .topText {
-                font-weight: 400;
-            }
-            .ant-form-item-required {
-                font-weight: 700;
-            }
-            .ant-radio-inner {
-                border-color: #b12028 !important;
-            }
-            .ant-radio-input:checked + .ant-radio-inner {
-                background-color: #b12028 !important;
-                border-color: #b12028 !important;
-            }
-            .ant-btn-primary {
-                background: #b12028 !important;
-                margin-bottom: 10px;
-            }
-            .thankuClass {
-                margin-top: 25%;
-                text-align: -webkit-center;
-                padding:5px;
-            }
-            .thankuImg {
-                width: 220px;
-                margin: 20px 10px
-            }
-            .gogRateBtn {
-                margin: 10%;
-                background: #b12028;
-                border-radius: 10px;
-                border-style: dotted;
-                color: white;
-            }
-            .navi {
-                display: ruby-text;
-                width: -webkit-fill-available;
-                margin: 6px;
-                position: absolute;
-                top: 0;
-                text-align: right;	 
-            }
-            .fw400 {
-                font-weight: 400;
-            }
-            .underNavi {
-                border-bottom-style: solid;
-                margin-top: 8px;
-                border-width: 1px;
-                border-color: #9e9e9e0d;
-            }
-            .submitBtn {
-                margin: 5%;
-                width: 89%;
-            }
-            .thank-you-message{
-                color:antiquewhite;
-            }
 
+            .star-rating {
+    display: inline-flex;
+    flex-direction: row-reverse;
+}
+.star-rating input {
+    display: none;
+}
+.star-rating label {
+    padding: 5px;
+    font-size: 30px;
+    color: #ccc;
+    cursor: pointer;
+}
+.star-rating label:before {
+    content: '★';
+}
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #b11f29;
+}
+.star-rating.rtl {
+    flex-direction: row;
+}
+.star-rating.rtl input:checked ~ label {
+    color: #ccc;
+}
+.star-rating.rtl input:checked + label,
+.star-rating.rtl input:checked + label ~ label,
+.star-rating.rtl label:hover,
+.star-rating.rtl label:hover ~ label {
+    color: #b11f29;
+}
+            
+.btn:hover{
+    color: #ffffff;
+}
+            .cboth{
+                clear: both;
+            }
+            .btn-primaryix{
+                color: white;
+                background: #ffffff00;
+            }
+            .btn-primaryi{
+                color: white;
+                background: #b11f29;
+            }
+            .form-check-input:checked {
+    background-color: #b11f29 !important;
+    border-color: #b11f29 !important;
+}
         </style>
     </head>
     <body>
-        <div id="root"></div>
-        <script type="text/babel">
-        const translations = {
-            restaurantNameOld: { sa: 'مطعم ريدستون', en: 'Redston Restaurant' },
-            topText: { sa: 'آراؤكم وملاحظاتكم تساهم في تحسين تجربة ردستون وجعل زيارتكم القادمة أفضل!',
-            en: 'Your feedback and suggestions help improve the Redston experience and ensure an even better visit next time.' },
-            personalInfo: { sa: 'المعلومات الشخصية', en: 'Personal Information' },
-            fullName: { sa: 'الاسم الكامل', en: 'Full Name' },
-            mobile: { sa: 'رقم الجوال', en: 'Mobile' },
-            visitDate: { sa: 'تاريخ الزيارة', en: 'Your visit date' },
-            visitInfo: { sa: 'تفاصيل عن زيارتكم لمطعم ردستون', en: 'Visit Information' },
-            hearAbout: { sa: 'كيف سمعت عن مطعمنا؟', en: 'How did you hear about our restaurant?' },
-            friend: { sa: 'توصية من صديق أو عائلة', en: 'Recommendation from a friend or family' },
-            snapchat: { sa: 'عبر سناب شات', en: 'Via Snapchat' },
-            instagram: { sa: 'عبر انستغرام', en: 'Via Instagram' },
-            tiktok: { sa: 'عبر تيك توك', en: 'Via TikTok' },
-            searchEngine: { sa: 'محرك بحث (جوجل، بينج، إلخ)', en: 'Search engine (Google, Bing, etc.)' },
-            influencers: { sa: 'عبر إعلانات مؤثرين السوشال ميديا', en: 'Through social media influencer ads' },
-            other: { sa: 'أخرى', en: 'Other' },
-            visitFrequency: { sa: 'هل هذه أول تجربة لك في ريدستون؟', en: 'Is this your first experience in Redston?' },
-            firstVisit: { sa: 'نعم، أول زيارة', en: 'Yes, first visit' },
-            visitedBefore: { sa: 'لا، لقد زرناكم من قبل (مرة - مرتين)', en: 'No, we have visited you before (once - twice)' },
-            frequentVisitor: { sa: 'لقد زرناكم أكثر من 3 مرات', en: 'We have visited you more than 3 times' },
-            qualityRating: { sa: 'تقييم الجودة والخدمة في ردستون', en: 'Quality Rating' },
-            steakQuality: { sa: 'كيف تقيم جودة الستيك واللحوم؟', en: 'How do you rate the quality of steak and meat?' },
-            feedbackSuggestions: { sa: 'آراؤكم حول زيارتكم وتجربتكم في ردستون', en: 'Your opinions about your visit and experience at Redstone.' },
-            overallExperience: { sa: 'قيم تجربتك العامة في ريدستون', en: 'Rate your overall experience at Redston' },
-            suggestions: { sa: 'هل لديك اقتراحات أو ملاحظات لقد تجعل من زيارتكم القادمة لردستون أفضل؟', en: 'Do you have any suggestions or feedback that could improve your next visit at Redston?' },
-            lowRatingFeedback: { sa: 'نتمنى أن تطلعونا على أسباب وجوانب عدم رضاكم عن التجربة ليتم العمل على تطويرها',
-            en: 'We hope that you will inform us about the reasons and aspects of your dissatisfaction with the experience so that we can work on improving it.' },
-            submit: { sa: 'إرسال', en: 'Submit' },
-            serviceQuality: { sa: 'كيف كانت الخدمة أثناء تجربتك؟', en: 'How was the service during your experience?' },
-            pleaseFillAllFields: { sa: 'يرجى تعبئة جميع الحقول المطلوبة!', en: 'Please fill in all required fields!' },
-            thanku: { sa: 'شكراً لتخصيص وقتكم للإجابة على الأسئلة. نسعد دائماً بخدمتكم ونتطلع لتحسين تجربتكم معنا باستمرار!', en: 'Thank you for taking the time to answer the questions. We are always happy to serve you and look forward to continuously improving your experience with us!' },
-            gogRate: { sa: 'قيمنا على Google Maps لمساعدتنا في تقديم الأفضل!', en: 'Rate us on Google Maps to help us deliver the best!' },
-            error: { sa: 'خطأ', en: 'Error' },
-            languageToggle: { sa:'English' , en: 'العربية' },
-            otherSource: { sa: 'يرجى التحديد', en: 'Please specify' },
-            pleaseSpecify: { sa: 'يرجى تحديد المصدر', en: 'Please specify the source' },
-            invalidMobileFormat: { 
-                sa: 'يجب أن يبدأ رقم الجوال بـ 05 ويتكون من 10 أرقام', 
-                en: 'Mobile number must start with 05 and be 10 digits long'
-            },
-            mobileRequired: { 
-                sa: 'رقم الجوال مطلوب', 
-                en: 'Mobile number is required'
-            },
-        };
-            const { Collapse, Form, Input, DatePicker, Radio, Rate, Button, notification } = antd;
-            const { Panel } = Collapse;
+        <div class="container my-0">
+            <div class="text-end mb-3">
+                <button id="langToggle" class="btn btn-primaryix"
+                    onclick="toggleLanguage()"
+                    data-lang="langBtn">العربية🌐</button>
+            </div>
+            <img src="/img/logo.png?324324234234"
+                class="attachment-full size-full"
+                style="width: 100%; margin-bottom: 20px;">
 
-            const FeedbackForm = () => {
-                const [form] = Form.useForm();
-                const [state, setState] = React.useState({
-                    activeKey: ['1'],
-                    language: 'sa',
-                    submitted: false,
-                    qualityRating: 0,
-                    serviceQuality: 0,
-                    overallExperience: 0,
-                    showOtherInput: false
-                });
-
-                const validateMobile = (_, value) => {
-                    const regex = /^05\d{8}$/;
-                    if (!value || regex.test(value)) {
-                        return Promise.resolve();
-                    }
-                    return Promise.reject(new Error(t('invalidMobileFormat')));
-                };
-
-                const t = (key) => {
-                    if (translations[key] && translations[key][state.language]) {
-                        return translations[key][state.language];
-                    }
-                    console.warn(`Translation missing for key: ${key}`);
-                    return key;
-                };
-
-                const panelFields = {
-                    '1': ['fullName', 'mobile'],
-                    '2': ['visitDate', 'hearAbout', 'visitFrequency'],
-                    '3': ['qualityRating', 'serviceQuality', 'overallExperience', 'suggestions']
-                };
-
-                const onFieldsChange = (changedFields, allFields) => {
-                    const currentPanel = state.activeKey[state.activeKey.length - 1];
-                    const currentPanelFields = panelFields[currentPanel];
-
-                    const allFieldsFilled = currentPanelFields.every(fieldName => {
-                        const field = allFields.find(f => f.name[0] === fieldName);
-                        return field && field.value !== undefined && field.value !== '';
-                    });
-
-                    if (allFieldsFilled) {
-                        const nextPanel = String(Number(currentPanel) + 1);
-                        if (panelFields[nextPanel] && !state.activeKey.includes(nextPanel)) {
-                            setState(prevState => ({ 
-                                ...prevState, 
-                                activeKey: [...prevState.activeKey, nextPanel] 
-                            }));
-                        }
-                    }
-                };
-
-                const onHearAboutChange = (e) => {
-                    setState(prevState => ({
-                        ...prevState,
-                        showOtherInput: e.target.value === 'other'
-                    }));
-                };
-
-                const onFinish = async (values) => {
-                    try {
-                        if (values.hearAbout === 'other' && values.hearAboutOther) {
-                            values.hearAbout = values.hearAboutOther;
-                            delete values.hearAboutOther;
-                        }
-                        console.log(values);
-                        const response = await fetch('/req/', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(values)
-                        });
-
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-
-                        const result = await response.json();
-                        console.log('Success:', result);
-                        setState(prevState => ({ 
-                            ...prevState, 
-                            submitted: true,
-                            qualityRating: values.qualityRating,
-                            serviceQuality: values.serviceQuality,
-                            overallExperience: values.overallExperience
-                        }));
-                    } catch (error) {
-                        console.error('Error:', error);
-                    }
-                };
-
-                const onFinishFailed = ({ errorFields }) => {
-                    if (errorFields.length > 0) {
-                        form.scrollToField(errorFields[0].name);
-                        notification.error({
-                            message: t('error'),
-                            description: t('pleaseFillAllFields'),
-                            placement: 'topRight',
-                        });
-                    }
-                };
-
-                const toggleLanguage = () => {
-                    const newLang = state.language === 'sa' ? 'en' : 'sa';
-                    const newDir = newLang === 'sa' ? 'rtl' : 'ltr';
-                    setState(prevState => ({ 
-                        ...prevState, 
-                        language: newLang,
-                        direction: newDir
-                    }));
-                    document.documentElement.style.direction = newDir;
-                };
-
-                if (state.submitted) {
-                    const showGoogleRating = state.qualityRating >= 4 && state.serviceQuality >= 4 && state.overallExperience >= 4;
-                    
-                    return (
-                        <div className="thankuClass ant-collapse ant-collapse-icon-position-start css-d2lrxs p-5">
-                            <img 
-                                src="/img/logo.png?3243242342343"
-                                className="thankuImg"
-                                alt="Thank you"
-                            />
-                            <div className="thank-you-message p-4">
-                                <span className="fw400">{t('thanku')}</span>
-                            </div>
-                            <br />
-                            {showGoogleRating && (
-                                <a href="https://maps.app.goo.gl/z3oSw8zQPDv6FaiQA">
-                                    <button className="gogRateBtn">{t('gogRate')}</button>
-                                </a>
-                            )}
-                        </div>
-                    );
-                }
-
-                const resetZoom = () => {
-                    if ('visualViewport' in window) {
-                        // For browsers that support visualViewport
-                        if (window.visualViewport.scale !== 1) {
-                            document.body.style.transform = `scale(${1 / window.visualViewport.scale})`;
-                            document.body.style.transformOrigin = 'center top';
-                            setTimeout(() => {
-                                document.body.style.transform = '';
-                                document.body.style.transformOrigin = '';
-                            }, 300);
-                        }
-                    } else {
-                        document.body.style.zoom = 1;
-                    }
-                };
-
-                return (
-                    <div>
-                        <div className="header">
-                            <div className="navi">
-                                <span 
-                                    onClick={toggleLanguage}
-                                    className="fw400">
-                                    {t('languageToggle')} 🌐
-                                </span>
-                                <div className="underNavi"></div>
-                            </div>
-                            <img 
-                                src="/img/logo.png?324324234234" 
-                                alt={t('topText')} 
-                                className="attachment-full size-full wp-image-28965 headImgxxxxxx"
-                                style={{ width: '100%', marginBottom: '20px' }}
-                            />
-                            <div className="topText">{t('topText')}</div>
-                        </div>
-                        <Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed} layout="vertical" onFieldsChange={onFieldsChange}>
-                            <Collapse activeKey={state.activeKey} onChange={activeKey => setState(prevState => ({ ...prevState, activeKey }))}>
-                                <Panel header={t('personalInfo')} key="1">
-                                    <Form.Item name="fullName" label={t('fullName')} rules={[{ required: true }]}>
-                                        <Input />
-                                    </Form.Item>
-                                    <Form.Item 
-                                        name="mobile" 
-                                        label={t('mobile')} 
-                                        rules={[
-                                            { required: true, message: t('mobileRequired') },
-                                            { validator: validateMobile }
-                                        ]}
-                                    >
-                                        <Input placeholder="05xxxxxxxx" />
-                                    </Form.Item>
-                                </Panel>
-                                <Panel header={t('visitInfo')} key="2">
-                                    <Form.Item name="visitDate" label={t('visitDate')} rules={[{ required: true }]}>
-                                        <DatePicker onChange={() => {
-                                            setTimeout(resetZoom, 300);
-                                        }} />
-                                    </Form.Item>
-                                    <Form.Item name="hearAbout" label={t('hearAbout')} rules={[{ required: true }]}>
-                                        <Radio.Group onChange={onHearAboutChange}>
-                                            <Radio value="friend">{t('friend')}</Radio>
-                                            <Radio value="snapchat">{t('snapchat')}</Radio>
-                                            <Radio value="instagram">{t('instagram')}</Radio>
-                                            <Radio value="tiktok">{t('tiktok')}</Radio>
-                                            <Radio value="searchEngine">{t('searchEngine')}</Radio>
-                                            <Radio value="influencers">{t('influencers')}</Radio>
-                                            <Radio value="other">{t('other')}</Radio>
-                                        </Radio.Group>
-                                    </Form.Item>
-                                    {state.showOtherInput && (
-                                        <Form.Item 
-                                            name="hearAboutOther" 
-                                            label={t('otherSource')} 
-                                            rules={[{ required: true, message: t('pleaseSpecify') }]}
-                                        >
-                                            <Input.TextArea rows={4} />
-                                        </Form.Item>
-                                    )}
-                                    <Form.Item name="visitFrequency" label={t('visitFrequency')} className="hearAbout" rules={[{ required: true }]}>
-                                        <Radio.Group>
-                                            <Radio value="firstVisit">{t('firstVisit')}</Radio>
-                                            <Radio value="visitedBefore">{t('visitedBefore')}</Radio>
-                                            <Radio value="frequentVisitor">{t('frequentVisitor')}</Radio>
-                                        </Radio.Group>
-                                    </Form.Item>
-                                </Panel>
-                                <Panel header={t('feedbackSuggestions')} key="3">
-                                    <Form.Item name="qualityRating" label={t('steakQuality')} rules={[{ required: true }]}>
-                                        <Rate />
-                                    </Form.Item>
-                                    <Form.Item name="serviceQuality" label={t('serviceQuality')} rules={[{ required: true }]}>
-                                        <Rate />
-                                    </Form.Item>
-                                    <Form.Item name="overallExperience" label={t('overallExperience')} rules={[{ required: true }]}>
-                                        <Rate />
-                                    </Form.Item>
-                                    <Form.Item
-                                        name="suggestions"
-                                        label={t('suggestions')}
-                                        rules={[
-                                            ({ getFieldValue }) => ({
-                                                required: getFieldValue('qualityRating') < 4 || 
-                                                          getFieldValue('serviceQuality') < 4 || 
-                                                          getFieldValue('overallExperience') < 4
-                                            })
-                                        ]}
-                                    >
-                                        <Input.TextArea />
-                                    </Form.Item>
-                                    <Form.Item noStyle shouldUpdate>
-                                        {({ getFieldValue }) =>
-                                            (getFieldValue('qualityRating') !== undefined &&
-                                             getFieldValue('serviceQuality') !== undefined && 
-                                             getFieldValue('overallExperience') !== undefined &&
-                                             (getFieldValue('qualityRating') < 4 || 
-                                              getFieldValue('serviceQuality') < 4 || 
-                                              getFieldValue('overallExperience') < 4)) ? (
-                                                <div style={{ color: 'red', marginTop: '-24px', marginBottom: '24px' }}>
-                                                    {t('lowRatingFeedback')}
-                                                </div>
-                                            ) : null
-                                        }
-                                    </Form.Item>
-                                </Panel>
-                            </Collapse>
-                            <Form.Item>
-                                <Button className="submitBtn" type="primary" htmlType="submit">{t('submit')}</Button>
-                            </Form.Item>
-                        </Form>
+            <form id="survey-form">
+                <div id="page-1" class="survey-page active">
+                    <h2 class="wavy-text text-center mb-4"
+                        data-lang="page1-title">Help us
+                        know you better</h2>
+                    <div class="mb-3 w-100">
+                        <label for="name" class="form-label w-100"
+                            data-optional="true"
+                            data-lang="name">Full name:</label>
+                        <input type="text" class="form-control" id="name"
+                            name="name">
                     </div>
-                );
-            };
+                    <div class="mb-3 w-100">
+                        <label for="phone" class="form-label w-100"
+                            data-optional="true" 
+                            data-lang="phone">Phone Number:</label>
+                        <input placeholder="0512346789" maxlength="10" type="tel" class="form-control" id="phone"
+                            name="phone">
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label class="form-label w-100"
+                            data-lang="gender">Gender:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio"
+                                name="gender" id="gender-male" value="male">
+                            <label class="form-check-label" for="gender-male"
+                                data-lang="male">Male</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio"
+                                name="gender" id="gender-female" value="female">
+                            <label class="form-check-label" for="gender-female"
+                                data-lang="female">Female</label>
+                        </div>
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label for="age-group" class="form-label w-100"
+                            data-lang="age-group">What is your age
+                            group?</label>
+                        <select class="form-select" data-optional="true" id="age-group"
+                            name="age-group">
+                            <option value="18-24" data-lang="18-24">18 -
+                                24</option>
+                            <option value="25-34" data-lang="25-34">25 -
+                                34</option>
+                            <option value="35-44" data-lang="35-44">35 -
+                                44</option>
+                            <option value="+45" data-lang="+45">+45</option>
+                        </select>
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label for="location" class="form-label w-100"
+                            data-lang="location">Where are you from?</label>
+                        <select class="form-select" data-optional="true" id="location"
+                            name="location">
+                            <option value="madinah" data-lang="madinah">In
+                                Madinah</option>
+                            <option value="ksa" data-lang="ksa">Living in Saudi
+                                Arabia</option>
+                            <option value="visitor"
+                                data-lang="visitor">Visitor</option>
+                        </select>
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label for="source" class="form-label w-100"
+                            data-lang="source">How did you know about
+                            Redston?</label>
+                        <select class="form-select" data-optional="true" id="source" name="source">
+                            <option value="friend" data-lang="friend">A friend/
+                                family recommendation</option>
+                            <option value="instagram"
+                                data-lang="instagram">Instagram Ad</option>
+                            <option value="snapchat"
+                                data-lang="snapchat">Snapchat Ad</option>
+                            <option value="tiktok" data-lang="tiktok">TikTok
+                                Ad</option>
+                            <option value="google" data-lang="google">Google
+                                search</option>
+                            <option value="other"
+                                data-lang="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label for="visit-frequency" class="form-label w-100"
+                            data-lang="visit-frequency">How Often Do You Visit
+                            Redston?</label>
+                        <select data-optional="true" class="form-select" id="visit-frequency"
+                            name="visit-frequency">
+                            <option value="first-time"
+                                data-lang="first-time">First Time</option>
+                            <option value="once-month"
+                                data-lang="once-month">Once a month</option>
+                            <option value="2-3-month" data-lang="2-3-month">2-3
+                                times a month</option>
+                            <option value="weekly"
+                                data-lang="weekly">Weekly</option>
+                            <option value="more-than-weekly"
+                                data-lang="more-than-weekly">More than once a
+                                week</option>
+                        </select>
+                    </div>
+                </div>
 
-            ReactDOM.createRoot(document.getElementById('root')).render(<FeedbackForm />);
+                <div id="page-2" class="survey-page">
+                    <h2 class="wavy-text text-center mb-4"
+                        data-lang="page2-title">Rate
+                        Your Food Experience</h2>
+                    <div class="mb-3 w-100">
+                        <label class="form-label w-100"
+                            data-lang="food-taste">How would you rate the taste
+                            of the food?</label>
+                        <div class="star-rating">
+                            <input type="radio" id="taste-5" name="food-taste"
+                                value="5"><label for="taste-5"></label>
+                            <input type="radio" id="taste-4" name="food-taste"
+                                value="4"><label for="taste-4"></label>
+                            <input type="radio" id="taste-3" name="food-taste"
+                                value="3"><label for="taste-3"></label>
+                            <input type="radio" id="taste-2" name="food-taste"
+                                value="2"><label for="taste-2"></label>
+                            <input type="radio" id="taste-1" name="food-taste"
+                                value="1"><label for="taste-1"></label>
+                        </div>
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label class="form-label w-100"
+                            data-lang="dish-presentation">How would you rate the
+                            dishes presentation?</label>
+                        <div class="star-rating">
+                            <input type="radio" id="presentation-5"
+                                name="dish-presentation" value="5"><label
+                                for="presentation-5"></label>
+                            <input type="radio" id="presentation-4"
+                                name="dish-presentation" value="4"><label
+                                for="presentation-4"></label>
+                            <input type="radio" id="presentation-3"
+                                name="dish-presentation" value="3"><label
+                                for="presentation-3"></label>
+                            <input type="radio" id="presentation-2"
+                                name="dish-presentation" value="2"><label
+                                for="presentation-2"></label>
+                            <input type="radio" id="presentation-1"
+                                name="dish-presentation" value="1"><label
+                                for="presentation-1"></label>
+                        </div>
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label class="form-label w-100"
+                            data-lang="menu-variety">Please rate the variety of
+                            items on the menu</label>
+                        <div class="star-rating">
+                            <input type="radio" id="variety-5"
+                                name="menu-variety" value="5"><label
+                                for="variety-5"></label>
+                            <input type="radio" id="variety-4"
+                                name="menu-variety" value="4"><label
+                                for="variety-4"></label>
+                            <input type="radio" id="variety-3"
+                                name="menu-variety" value="3"><label
+                                for="variety-3"></label>
+                            <input type="radio" id="variety-2"
+                                name="menu-variety" value="2"><label
+                                for="variety-2"></label>
+                            <input type="radio" id="variety-1"
+                                name="menu-variety" value="1"><label
+                                for="variety-1"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="page-3" class="survey-page">
+                    <h2 class="wavy-text text-center mb-4"
+                        data-lang="page3-title">Service
+                        & Atmosphere Feedback</h2>
+                    <div class="mb-3 w-100">
+                        <label class="form-label w-100"
+                            data-lang="service-satisfaction">How satisfied were
+                            you with the service provided by our staff?</label>
+                        <div class="star-rating">
+                            <input type="radio" id="service-5"
+                                name="service-satisfaction" value="5"><label
+                                for="service-5"></label>
+                            <input type="radio" id="service-4"
+                                name="service-satisfaction" value="4"><label
+                                for="service-4"></label>
+                            <input type="radio" id="service-3"
+                                name="service-satisfaction" value="3"><label
+                                for="service-3"></label>
+                            <input type="radio" id="service-2"
+                                name="service-satisfaction" value="2"><label
+                                for="service-2"></label>
+                            <input type="radio" id="service-1"
+                                name="service-satisfaction" value="1"><label
+                                for="service-1"></label>
+                        </div>
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label class="form-label w-100"
+                            data-lang="restaurant-cleanliness">How would you
+                            rate the cleanliness of the restaurant?</label>
+                        <div class="star-rating">
+                            <input type="radio" id="cleanliness-5"
+                                name="restaurant-cleanliness" value="5"><label
+                                for="cleanliness-5"></label>
+                            <input type="radio" id="cleanliness-4"
+                                name="restaurant-cleanliness" value="4"><label
+                                for="cleanliness-4"></label>
+                            <input type="radio" id="cleanliness-3"
+                                name="restaurant-cleanliness" value="3"><label
+                                for="cleanliness-3"></label>
+                            <input type="radio" id="cleanliness-2"
+                                name="restaurant-cleanliness" value="2"><label
+                                for="cleanliness-2"></label>
+                            <input type="radio" id="cleanliness-1"
+                                name="restaurant-cleanliness" value="1"><label
+                                for="cleanliness-1"></label>
+                        </div>
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label class="form-label w-100"
+                            data-lang="food-cleanliness">How would you rate the
+                            cleanliness of the food?</label>
+                        <div class="star-rating">
+                            <input type="radio" id="food-cleanliness-5"
+                                name="food-cleanliness" value="5"><label
+                                for="food-cleanliness-5"></label>
+                            <input type="radio" id="food-cleanliness-4"
+                                name="food-cleanliness" value="4"><label
+                                for="food-cleanliness-4"></label>
+                            <input type="radio" id="food-cleanliness-3"
+                                name="food-cleanliness" value="3"><label
+                                for="food-cleanliness-3"></label>
+                            <input type="radio" id="food-cleanliness-2"
+                                name="food-cleanliness" value="2"><label
+                                for="food-cleanliness-2"></label>
+                            <input type="radio" id="food-cleanliness-1"
+                                name="food-cleanliness" value="1"><label
+                                for="food-cleanliness-1"></label>
+                        </div>
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label class="form-label w-100"
+                            data-lang="atmosphere">How would you rate the
+                            atmosphere of the restaurant?</label>
+                        <div class="star-rating">
+                            <input type="radio" id="atmosphere-5"
+                                name="atmosphere" value="5"><label
+                                for="atmosphere-5"></label>
+                            <input type="radio" id="atmosphere-4"
+                                name="atmosphere" value="4"><label
+                                for="atmosphere-4"></label>
+                            <input type="radio" id="atmosphere-3"
+                                name="atmosphere" value="3"><label
+                                for="atmosphere-3"></label>
+                            <input type="radio" id="atmosphere-2"
+                                name="atmosphere" value="2"><label
+                                for="atmosphere-2"></label>
+                            <input type="radio" id="atmosphere-1"
+                                name="atmosphere" value="1"><label
+                                for="atmosphere-1"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="page-4" class="survey-page">
+                    <h2 class="wavy-text text-center mb-4"
+                        data-lang="page4-title">Share
+                        Your Thoughts To Make Your Next Visit Better</h2>
+                    <div class="mb-3 w-100">
+                        <label for="decor-suggestions" class="form-label w-100"
+                            data-optional="true"
+                            data-lang="decor-suggestions">Do you have any
+                            suggestions regarding the decor or ambiance?(optional)</label>
+                        <textarea class="form-control" id="decor-suggestions"
+                            name="decor-suggestions" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label for="experience-enhancement"
+                            class="form-label w-100"
+                            data-optional="true"
+                            data-lang="experience-enhancement">What would
+                            enhance your dining experience?(optional)</label>
+                        <textarea class="form-control"
+                            id="experience-enhancement"
+                            name="experience-enhancement" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label for="menu-suggestions" class="form-label w-100"
+                            data-optional="true"
+                            data-lang="menu-suggestions">Do you have any
+                            suggestions for new dishes or improvements to our
+                            current menu?(optional)</label>
+                        <textarea class="form-control" id="menu-suggestions"
+                            name="menu-suggestions" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label class="form-label w-100"
+                            data-lang="overall-experience">Rate Your Experience
+                            at Redston</label>
+                        <div class="star-rating">
+                            <input type="radio" id="overall-5"
+                                name="overall-experience" value="5"><label
+                                for="overall-5"></label>
+                            <input type="radio" id="overall-4"
+                                name="overall-experience" value="4"><label
+                                for="overall-4"></label>
+                            <input type="radio" id="overall-3"
+                                name="overall-experience" value="3"><label
+                                for="overall-3"></label>
+                            <input type="radio" id="overall-2"
+                                name="overall-experience" value="2"><label
+                                for="overall-2"></label>
+                            <input type="radio" id="overall-1"
+                                name="overall-experience" value="1"><label
+                                for="overall-1"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3 cboth">
+                    <button type="button" class="btn btn-secondary"
+                        id="prev-btn" onclick="navigatePage(-1)"
+                        data-lang="previous">Previous</button>
+                    <button type="button" class="btn btn-primaryi mx-1"
+                        id="next-btn"
+                        onclick="navigatePage(1)" data-lang="next">Next</button>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            let currentPage = 1;
+const totalPages = 4;
+let currentLanguage = 'en';
+
+const translations = {
+    ar: {
+        "page1-title": "ساعدنا في التعرف عليك بشكل أفضل",
+        "name": "الاسم الكامل",
+        "phone": "رقم الجوال",
+        "gender": "الجنس:",
+        "male": "رجل",
+        "female": "أنثى",
+        "age-group": "ما هي فئتك العمرية؟",
+        "18-24": "18 - 24",
+        "25-34": "25 - 34",
+        "35-44": "35 - 44",
+        "+45": "+45",
+        "location": "أين تُقيم حالياً؟",
+        "madinah": "من أهل المدينة المنورة",
+        "ksa": "في أحد مناطق المملكة",
+        "visitor": "خارج المملكة العربية السعودية",
+        "source": "كيف سمعت عن ردستون؟",
+        "friend": "توصية من صديق/ عائلة",
+        "instagram": "اعلان على منصة انستغرام",
+        "snapchat": "اعلان على منصة سناب شات",
+        "tiktok": "اعلان على منصة تيك توك",
+        "google": "البحث في غوغل",
+        "other": "أخرى",
+        "visit-frequency": "كم مرة تزور ردستون؟",
+        "first-time": "أول مرة",
+        "once-month": "مرة في الشهر",
+        "2-3-month": "2-3 مرات في الشهر",
+        "weekly": "أسبوعياً",
+        "more-than-weekly": "أكثر من مرة في الأسبوع",
+        "page2-title": "قيّم تجربتك مع الطعام",
+        "food-taste": "كيف تٌقيم النكهات في الأطباق التي اخترتها؟",
+        "dish-presentation": "كيف تقيم تقديم الأطباق (شكلياً)",
+        "menu-variety": "يُرجى تقييم الأصناف من حيث التنوع",
+        "page3-title": "ملاحظاتك حول الخدمة والأجواء",
+        "service-satisfaction": "ما مدى رضاك عن الخدمة المقدمة من طاقمنا؟",
+        "restaurant-cleanliness": "كيف تقيم نظافة المطعم؟",
+        "food-cleanliness": "كيف تقيم نظافة الطعام؟",
+        "atmosphere": "كيف تقيم الأجواء العامة للمطعم؟",
+        "page4-title": "شاركنا اقتراحاتك لجعل تجربتك القادمة أفضل",
+        "decor-suggestions": "(اختياري)هل لديك أي اقتراحات بخصوص الديكور أو الأجواء؟",
+        "experience-enhancement": "(اختياري)ما الذي يمكن أن يحسن تجربتك في تناول الطعام؟",
+        "menu-suggestions": "(اختياري)هل لديك أي اقتراحات لأطباق جديدة أو تحسينات على قائمتنا الحالية؟",
+        "overall-experience": "قيّم تجربتك في ردستون",
+        "previous": "السابق",
+        "next": "التالي",
+        "submit": "إرسال",
+        "validation-error": "خطأ",
+        "please-fill-required": "يرجى ملء جميع الحقول المطلوبة",
+        "please-select-rating": "يرجى اختيار تقييم",
+        "ok": "حسنا",
+        "please-select-option": "الرجاء تحديد خيار",
+        "please-fill-required": "يرجى ملء جميع الحقول المطلوبة"
+    },
+    en: {
+        "page1-title": "Help us know you better",
+        "name": "Full name:",
+        "phone": "Phone Number:",
+        "gender": "Gender:",
+        "male": "Male",
+        "female": "Female",
+        "age-group": "What is your age group?",
+        "18-24": "18 - 24",
+        "25-34": "25 - 34",
+        "35-44": "35 - 44",
+        "+45": "+45",
+        "location": "Where are you from?",
+        "madinah": "In Madinah",
+        "ksa": "Living in Saudi Arabia",
+        "visitor": "Visitor",
+        "source": "How did you know about Redston?",
+        "friend": "A friend/ family recommendation",
+        "instagram": "Instagram Ad",
+        "snapchat": "Snapchat Ad",
+        "tiktok": "TikTok Ad",
+        "google": "Google search",
+        "other": "Other",
+        "visit-frequency": "How Often Do You Visit Redston?",
+        "first-time": "First Time",
+        "once-month": "Once a month",
+        "2-3-month": "2-3 times a month",
+        "weekly": "Weekly",
+        "more-than-weekly": "More than once a week",
+        "page2-title": "Rate Your Food Experience",
+        "food-taste": "How would you rate the taste of the food?",
+        "dish-presentation": "How would you rate the dishes presentation?",
+        "menu-variety": "Please rate the variety of items on the menu",
+        "page3-title": "Service & Atmosphere Feedback",
+        "service-satisfaction": "How satisfied were you with the service provided by our staff?",
+        "restaurant-cleanliness": "How would you rate the cleanliness of the restaurant?",
+        "food-cleanliness": "How would you rate the cleanliness of the food?",
+        "atmosphere": "How would you rate the atmosphere of the restaurant?",
+        "page4-title": "Share Your Thoughts To Make Your Next Visit Better",
+        "decor-suggestions": "Do you have any suggestions regarding the decor or ambiance?(optional)",
+        "experience-enhancement": "What would enhance your dining experience?(optional)",
+        "menu-suggestions": "Do you have any suggestions for new dishes or improvements to our current menu?(optional)",
+        "overall-experience": "Rate Your Experience at Redston",
+        "previous": "Previous",
+        "next": "Next",
+        "submit": "Submit",
+        "validation-error": "Validation Error",
+        "please-fill-required": "Please fill in all required fields",
+        "please-select-rating": "Please select a rating",
+        "ok": "OK",
+        "please-select-option": "Please select an option",
+        "please-fill-required": "Please fill in all required fields"
+    }
+};
+
+function toggleLanguage() {
+    changeLanguage(currentLanguage === 'en' ? 'ar' : 'en');
+}
+
+function updateLanguageButton() {
+    const langToggle = document.getElementById('langToggle');
+    langToggle.textContent = currentLanguage === 'en' ? '🌐العربية' : 'English🌐';
+    langToggle.classList.toggle('langBtn', currentLanguage !== 'en');
+    langToggle.classList.toggle('btn-outline-secondary', currentLanguage === 'en');
+}
+
+function updateTranslations() {
+    document.querySelectorAll('[data-lang]').forEach(element => {
+        const key = element.getAttribute('data-lang');
+        const translation = translations[currentLanguage][key];
+        if (translation) {
+            if (['INPUT', 'TEXTAREA'].includes(element.tagName)) {
+                element.placeholder = translation;
+            } else if (element.tagName === 'OPTION') {
+                element.text = translation;
+            } else {
+                element.textContent = translation;
+            }
+        }
+    });
+}
+function navigatePage(direction) {
+    if (direction > 0 && !validateCurrentPage()) {
+        return;
+    }
+
+    const newPage = currentPage + direction;
+    if (newPage < 1 || newPage > totalPages) return;
+    document.getElementById(`page-${currentPage}`).classList.remove('active');
+    document.getElementById(`page-${newPage}`).classList.add('active');
+    currentPage = newPage;
+    updateButtons();
+}
+
+function validateCurrentPage() {
+    console.log('Validating page:', currentPage);
+    const currentPageElement = document.getElementById(`page-${currentPage}`);
+    
+    // Check text inputs, textareas, and selects
+    const fields = currentPageElement.querySelectorAll('input[type="text"], textarea, select');
+    for (let field of fields) {
+        const label = currentPageElement.querySelector(`label[for="${field.id}"]`);
+        const isOptional = label && label.hasAttribute('data-optional');
+        console.log('Field:', field.name, 'Type:', field.type, 'Optional:', isOptional);
+        
+        if (!isOptional && !field.value.trim()) {
+            console.log('Empty required field:', field.name);
+           showAlert(getTranslation('please-fill-required'),getTranslation('validation-error'));
+            return false;
+        }
+    }
+    
+    // Check radio buttons
+    const radioGroups = new Set(Array.from(currentPageElement.querySelectorAll('input[type="radio"]')).map(radio => radio.name));
+    for (let groupName of radioGroups) {
+        const groupRadios = currentPageElement.querySelectorAll(`input[type="radio"][name="${groupName}"]`);
+        const label = currentPageElement.querySelector(`label[for="${groupRadios[0].id}"]`);
+        const isOptional = label && label.hasAttribute('data-optional');
+        console.log('Radio group:', groupName, 'Optional:', isOptional);
+        
+        if (!isOptional && !Array.from(groupRadios).some(radio => radio.checked)) {
+            console.log('No selection in required radio group:', groupName);
+           showAlert(getTranslation('please-select-option'),getTranslation('validation-error'));
+            return false;
+        }
+    }
+    
+    console.log('All fields valid');
+    return true;
+}
+function getTranslation(key) {
+    return translations[currentLanguage][key] || key;
+}
+
+function showAlert(message,title,icon = 'warning') {
+    // Assuming you're using SweetAlert2
+    Swal.fire({
+        title: title,
+        text: message,
+        icon: icon,
+        confirmButtonText: getTranslation('ok')
+    });
+}
+
+
+function updateButtons() {
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    prevBtn.style.display = currentPage === 1 ? 'none' : 'inline-block';
+    nextBtn.textContent = translations[currentLanguage][currentPage === totalPages ? 'submit' : 'next'];
+    nextBtn.onclick = currentPage === totalPages ? submitForm : () => navigatePage(1);
+}
+
+function submitForm() {
+    // Validate the current page's form inputs
+    if (!validateCurrentPage()) {
+        // Show an alert if validation fails
+        showAlert(getTranslation('please-select-option'), getTranslation('validation-error'));
+        return;
+    }
+
+    // Collect the form data using FormData API
+    const formData = new FormData(document.getElementById('survey-form'));
+    
+    // Convert formData into a plain object for logging
+    console.log('Form data:', Object.fromEntries(formData.entries()));
+
+    // Prepare the form data to send as JSON
+    const formObject = Object.fromEntries(formData.entries());
+    const jsonData = JSON.stringify(formObject);
+
+    // Send the data to the backend via an AJAX POST request
+    fetch('/req/new_req.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: jsonData
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Handle success response
+        if (data.success) {
+            showAlert('Thank you for your feedback!', '❤️', 'success');
+        } else {
+            // Handle error response
+            showAlert(data.message, 'Error', 'error');
+        }
+    })
+    .catch(error => {
+        // Handle network or other errors
+        console.error('Error submitting form:', error);
+        showAlert('Something went wrong. Please try again later.', 'Error', 'error');
+    });
+}
+
+
+function changeLanguage(lang) {
+    currentLanguage = lang;
+    document.documentElement.lang = lang;
+    document.body.className = lang === 'ar' ? 'rtl' : 'ltr';
+    updateLanguageButton();
+    updateTranslations();
+    
+    // Reset form, navigation, and star colors
+    document.getElementById('survey-form').reset();
+    currentPage = 1;
+    document.querySelectorAll('.survey-page').forEach((page, index) => {
+        page.classList.toggle('active', index === 0);
+    });
+    document.querySelectorAll('.star-rating').forEach(rating => {
+        rating.querySelectorAll('input').forEach(input => {
+            input.checked = false;
+            input.nextElementSibling.style.color = '#ccc';  // Reset star color
+        });
+    });
+    updateStarRatings();
+    updateButtons();
+}
+
+function initializeStarRatings() {
+    document.querySelectorAll('.star-rating').forEach(rating => {
+        rating.querySelectorAll('input').forEach(input => {
+            input.addEventListener('change', () => updateStarColors(rating, parseInt(input.value)));
+        });
+    });
+}
+
+function updateStarRatings() {
+    const isRTL = currentLanguage === 'ar';
+    document.querySelectorAll('.star-rating').forEach(rating => {
+        rating.classList.toggle('rtl', isRTL);
+        rating.querySelectorAll('input').forEach((input, index) => {
+            input.value = isRTL ? 6 - (5 - index) : 5 - index;
+        });
+        const checkedInput = rating.querySelector('input:checked');
+        if (checkedInput) updateStarColors(rating, parseInt(checkedInput.value));
+    });
+}
+
+function updateStarColors(rating, value) {
+    const isRTL = rating.classList.contains('rtl');
+    rating.querySelectorAll('input').forEach((inp, index) => {
+        const starValue = isRTL ? index + 1 : 5 - index;
+        inp.nextElementSibling.style.color = (starValue <= value) ? '#b11f29' : '#ccc';
+    });
+}
+
+function flashError(element) {
+    element.style.transition = 'background-color 0.3s';
+    element.style.backgroundColor = 'red';
+    setTimeout(() => {
+        element.style.backgroundColor = 'white';
+    }, 300);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initializeStarRatings();
+    updateStarRatings();
+    const pinput = document.getElementById('phone');
+    pinput.addEventListener('input', function(e) {
+        let value = this.value.replace(/\D/g, '');
+        if (value.length >= 2 && !value.startsWith('05')) {
+            value = '';
+            flashError(this);
+        }
+        this.value = value.slice(0, 10);
+    });
+});
+
         </script>
     </body>
 </html>
