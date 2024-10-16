@@ -92,18 +92,26 @@
             .cboth{
                 clear: both;
             }
+            .btn-primaryix{
+                color: white;
+                background: #ffffff00;
+            }
             .btn-primaryi{
                 color: white;
                 background: #b11f29;
             }
+            .form-check-input:checked {
+    background-color: #b11f29 !important;
+    border-color: #b11f29 !important;
+}
         </style>
     </head>
     <body>
         <div class="container my-0">
             <div class="text-end mb-3">
-                <button id="langToggle" class="btn btn-primaryi"
+                <button id="langToggle" class="btn btn-primaryix"
                     onclick="toggleLanguage()"
-                    data-lang="langBtn">العربية</button>
+                    data-lang="langBtn">العربية🌐</button>
             </div>
             <img src="/img/logo.png?324324234234"
                 class="attachment-full size-full"
@@ -117,15 +125,15 @@
                     <div class="mb-3 w-100">
                         <label for="name" class="form-label w-100"
                             data-optional="true"
-                            data-lang="name">Name (optional):</label>
+                            data-lang="name">Full name:</label>
                         <input type="text" class="form-control" id="name"
                             name="name">
                     </div>
                     <div class="mb-3 w-100">
                         <label for="phone" class="form-label w-100"
-                            data-optional="true"
-                            data-lang="phone">Phone Number (optional):</label>
-                        <input type="tel" class="form-control" id="phone"
+                            data-optional="true" 
+                            data-lang="phone">Phone Number:</label>
+                        <input placeholder="0512346789" maxlength="10" type="tel" class="form-control" id="phone"
                             name="phone">
                     </div>
                     <div class="mb-3 w-100">
@@ -447,8 +455,8 @@ let currentLanguage = 'en';
 const translations = {
     ar: {
         "page1-title": "ساعدنا في التعرف عليك بشكل أفضل",
-        "name": "الاسم (اختياري):",
-        "phone": "رقم الجوال (اختياري):",
+        "name": "الاسم الكامل",
+        "phone": "رقم الجوال",
         "gender": "الجنس:",
         "male": "رجل",
         "female": "أنثى",
@@ -500,8 +508,8 @@ const translations = {
     },
     en: {
         "page1-title": "Help us know you better",
-        "name": "Name (optional):",
-        "phone": "Phone Number (optional):",
+        "name": "Full name:",
+        "phone": "Phone Number:",
         "gender": "Gender:",
         "male": "Male",
         "female": "Female",
@@ -559,7 +567,7 @@ function toggleLanguage() {
 
 function updateLanguageButton() {
     const langToggle = document.getElementById('langToggle');
-    langToggle.textContent = currentLanguage === 'en' ? 'العربية' : 'English';
+    langToggle.textContent = currentLanguage === 'en' ? '🌐العربية' : 'English🌐';
     langToggle.classList.toggle('langBtn', currentLanguage !== 'en');
     langToggle.classList.toggle('btn-outline-secondary', currentLanguage === 'en');
 }
@@ -652,16 +660,48 @@ function updateButtons() {
 }
 
 function submitForm() {
-    console.log(validateCurrentPage());
-    if(!validateCurrentPage())
-    {
-        showAlert(getTranslation('please-select-option'),getTranslation('validation-error'));
+    // Validate the current page's form inputs
+    if (!validateCurrentPage()) {
+        // Show an alert if validation fails
+        showAlert(getTranslation('please-select-option'), getTranslation('validation-error'));
         return;
     }
+
+    // Collect the form data using FormData API
     const formData = new FormData(document.getElementById('survey-form'));
+    
+    // Convert formData into a plain object for logging
     console.log('Form data:', Object.fromEntries(formData.entries()));
-    showAlert('Thank you for your feedback!','❤️','success');
+
+    // Prepare the form data to send as JSON
+    const formObject = Object.fromEntries(formData.entries());
+    const jsonData = JSON.stringify(formObject);
+
+    // Send the data to the backend via an AJAX POST request
+    fetch('/req/new_req.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: jsonData
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Handle success response
+        if (data.success) {
+            showAlert('Thank you for your feedback!', '❤️', 'success');
+        } else {
+            // Handle error response
+            showAlert(data.message, 'Error', 'error');
+        }
+    })
+    .catch(error => {
+        // Handle network or other errors
+        console.error('Error submitting form:', error);
+        showAlert('Something went wrong. Please try again later.', 'Error', 'error');
+    });
 }
+
 
 function changeLanguage(lang) {
     currentLanguage = lang;
@@ -714,9 +754,26 @@ function updateStarColors(rating, value) {
     });
 }
 
+function flashError(element) {
+    element.style.transition = 'background-color 0.3s';
+    element.style.backgroundColor = 'red';
+    setTimeout(() => {
+        element.style.backgroundColor = 'white';
+    }, 300);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initializeStarRatings();
     updateStarRatings();
+    const pinput = document.getElementById('phone');
+    pinput.addEventListener('input', function(e) {
+        let value = this.value.replace(/\D/g, '');
+        if (value.length >= 2 && !value.startsWith('05')) {
+            value = '';
+            flashError(this);
+        }
+        this.value = value.slice(0, 10);
+    });
 });
 
         </script>
