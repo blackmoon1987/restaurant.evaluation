@@ -33,20 +33,29 @@ function appendValues($spreadsheetId, $range, $values)
 function processData($data) {
     if (is_array($data) && !empty($data)) {
         $spreadsheetId = '19RYXXhP57YJlxPYjVodI0g40Kdlm41OWoVGxb0bXOz4'; // Replace with your actual spreadsheet ID
-        $range = 'Evaluation'; // Replace with your desired sheet name or range
+        $range = 'EvaluationX'; // Replace with your desired sheet name or range
 
-        // Format the data as a single row
+        // Format the data as a single row matching your form input names
         $formattedData = [
             [
-                $data['fullName'] ?? '',
-                $data['mobile'] ?? '',
-                $data['visitDate'] ?? '',
-                $data['hearAbout'] ?? '',
-                $data['visitFrequency'] ?? '',
-                $data['qualityRating'] ?? '',
-                $data['serviceQuality'] ?? '',
-                $data['overallExperience'] ?? '',
-                $data['suggestions'] ?? ''
+                $data['name'] ?? '',                    // Name (optional)
+                $data['phone'] ?? '',                   // Phone Number (optional)
+                $data['gender'] ?? '',                  // Gender
+                $data['age-group'] ?? '',               // Age Group
+                $data['location'] ?? '',                // Location
+                $data['source'] ?? '',                  // How did you know about Redston?
+                $data['visit-frequency'] ?? '',         // How often do you visit Redston?
+                $data['food-taste'] ?? '',              // Rate the taste of the food
+                $data['dish-presentation'] ?? '',       // Rate dish presentation
+                $data['menu-variety'] ?? '',            // Rate menu variety
+                $data['service-satisfaction'] ?? '',    // Service satisfaction
+                $data['restaurant-cleanliness'] ?? '',  // Restaurant cleanliness
+                $data['food-cleanliness'] ?? '',        // Food cleanliness
+                $data['atmosphere'] ?? '',              // Atmosphere
+                $data['decor-suggestions'] ?? '',       // Suggestions for decor
+                $data['experience-enhancement'] ?? '',  // Experience enhancement suggestions
+                $data['menu-suggestions'] ?? '',        // Menu suggestions
+                $data['overall-experience'] ?? ''       // Overall experience rating
             ]
         ];
 
